@@ -30,4 +30,7 @@ dependencies {
     // RecyclerView
     implementation 'com.android.support:recyclerview-v7:29.0.0'
 
+    //design support (for toolbars)
+    implementation 'com.android.support:design:28.0.0'
+
 }

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-
 import com.letsmakethatapp.note.models.Note;
 
 public class MainActivity extends AppCompatActivity {

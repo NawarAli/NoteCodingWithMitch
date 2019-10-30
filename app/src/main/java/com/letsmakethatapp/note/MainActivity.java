@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 
 import com.letsmakethatapp.note.adapters.NotesRecyclerAdapter;
@@ -16,9 +17,7 @@ import com.letsmakethatapp.note.util.VerticalSpacingItemDecorator;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NotesRecyclerAdapter.OnNoteListener {
-    // Tag
-    //private static final String TAG = "MainActivity";
-
+    private static final String TAG = "MainActivity";
     // Ui component
     private RecyclerView mRecyclerView;
     // variable
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
         mNotesRecyclerAdapter.notifyDataSetChanged();
     }
     private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView: done.");
         LinearLayoutManager linearLayoutManager = new
                 LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
 
     @Override
     public void onNoteClick(int position) {
+        Log.d(TAG, "onNoteClick: clicked"+position);
         Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra("selected_note",mNotes.get(position));
         startActivity(intent);
     }
 }

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class VerticalSpacingItemDecorator extends RecyclerView.ItemDecoration{
     private final int verticalSpacingHeight;
 
-    public VerticalSpacingItemDecorator(int verticalSpaingHeight) {
-        this.verticalSpacingHeight = verticalSpaingHeight;
+    public VerticalSpacingItemDecorator(int verticalSpacingHeight) {
+        this.verticalSpacingHeight = verticalSpacingHeight;
     }
 
     @Override

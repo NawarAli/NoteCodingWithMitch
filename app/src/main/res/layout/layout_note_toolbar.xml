@@ -54,7 +54,7 @@
         android:textSize="23sp"
         android:visibility="visible" />
 
-    <EditText
+    <com.letsmakethatapp.note.LinedEditText
         android:id="@+id/note_text_title_editable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

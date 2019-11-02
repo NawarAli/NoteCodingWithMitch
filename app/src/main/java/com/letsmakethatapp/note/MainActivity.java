@@ -1,14 +1,13 @@
 package com.letsmakethatapp.note;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.letsmakethatapp.note.adapters.NotesRecyclerAdapter;
 import com.letsmakethatapp.note.models.Note;
@@ -30,23 +29,17 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recyclerView);
         initRecyclerView();
+
+        //just for test
         insertFakeNotes();
+
         Toolbar toolbar = findViewById(R.id.notes_toolbar);
         setSupportActionBar(toolbar);
         this.setTitle("Notes");
 
     }
-    private void insertFakeNotes(){
-        for (int i =0; i < 20; i++){
-            Note note = new Note();
-            note.setTitle("title #"+i);
-            note.setContent("content #"+i);
-            note.setTimestamp("Jan 2019");
-            mNotes.add(note);
-        }
-        mNotesRecyclerAdapter.notifyDataSetChanged();
-    }
-    private void initRecyclerView(){
+
+    private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: done.");
         LinearLayoutManager linearLayoutManager = new
                 LinearLayoutManager(this);
@@ -59,9 +52,19 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
 
     @Override
     public void onNoteClick(int position) {
-        Log.d(TAG, "onNoteClick: clicked"+position);
         Intent intent = new Intent(this, NoteActivity.class);
-        intent.putExtra("selected_note",mNotes.get(position));
+        intent.putExtra("selected_note", mNotes.get(position));
         startActivity(intent);
+    }
+
+    private void insertFakeNotes() {
+        for (int i = 0; i < 20; i++) {
+            Note note = new Note();
+            note.setTitle("title #" + i);
+            note.setContent("content #" + i);
+            note.setTimestamp("Jan 2019");
+            mNotes.add(note);
+        }
+        mNotesRecyclerAdapter.notifyDataSetChanged();
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.letsmakethatapp.note.models.Note;
@@ -49,11 +50,11 @@ public class NoteActivity extends AppCompatActivity
         setListener();
         if (mIsNewNote) {
             //this is new note go to edit mode
-            setNoteProperties();
+            setNewNoteProperties();
             enableEditMode();
 
         } else {
-            setNewNoteProperties();
+            setNoteProperties();
             disableContentInteraction();
         }
     }
@@ -87,6 +88,7 @@ public class NoteActivity extends AppCompatActivity
         return true;
     }
 
+    @SuppressLint("SetTextI18n")
     private void setNewNoteProperties() {
         mViewTitle.setText("Note Title");
         mEditTitle.setText("Note Title");
@@ -166,6 +168,7 @@ public class NoteActivity extends AppCompatActivity
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return mGestureDetector.onTouchEvent(event);
@@ -184,6 +187,7 @@ public class NoteActivity extends AppCompatActivity
         if (view == null) {
             view = new View(this);
         }
+        assert imm != null;
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -194,9 +198,9 @@ public class NoteActivity extends AppCompatActivity
         if (view == null) {
             view = new View(this);
         }
+        assert imm != null;
         imm.showSoftInput(view, 0);
     }
-
 
     //EXTRA
     @Override

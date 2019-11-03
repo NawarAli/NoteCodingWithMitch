@@ -3,7 +3,6 @@ package com.letsmakethatapp.note;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.letsmakethatapp.note.models.Note;
@@ -23,7 +21,6 @@ public class NoteActivity extends AppCompatActivity
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,
         View.OnClickListener {
-    private static final String TAG = "NoteActivity";
     //const
     private static final int EDIT_MODE_ENABLED = 1;
     private static final int EDIT_MODE_DISABLED = 0;
@@ -119,14 +116,6 @@ public class NoteActivity extends AppCompatActivity
         disableContentInteraction();
     }
 
-    private void disableContentInteraction() {
-        mLinedEditText.setKeyListener(null);
-        mLinedEditText.setFocusable(false);
-        mLinedEditText.setFocusableInTouchMode(false);
-        mLinedEditText.setCursorVisible(false);
-        mLinedEditText.clearFocus();
-    }
-
     private void enableContentInteraction() {
         mLinedEditText.setKeyListener(new EditText(this).getKeyListener());
         mLinedEditText.setFocusable(true);
@@ -135,23 +124,55 @@ public class NoteActivity extends AppCompatActivity
         mLinedEditText.requestFocus();
     }
 
+    private void disableContentInteraction() {
+        mLinedEditText.setKeyListener(null);
+        mLinedEditText.setFocusable(false);
+        mLinedEditText.setFocusableInTouchMode(false);
+        mLinedEditText.setCursorVisible(false);
+        mLinedEditText.clearFocus();
+    }
+
+
+    private void showSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager)
+                this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        assert imm != null;
+        imm.showSoftInput(view, 0);
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager)
+                this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        assert imm != null;
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_check: {
-                hideSoftKeboard();
+                hideSoftKeyboard();
                 disableEditMode();
+                mMode = EDIT_MODE_DISABLED;
                 break;
             }
             case R.id.note_text_title: {
                 enableEditMode();
-                showSoftKeboard();
+                showSoftKeyboard();
                 mEditTitle.requestFocus();
                 mEditTitle.setSelection(mEditTitle.getText().length());
+                mMode = EDIT_MODE_ENABLED;
                 break;
             }
             case R.id.toolbar_back_arrow: {
-                Log.d(TAG, "backArrowClicked: " + mMode);
                 onBackPressed();
                 break;
             }
@@ -178,28 +199,6 @@ public class NoteActivity extends AppCompatActivity
     public boolean onDoubleTap(MotionEvent e) {
         enableEditMode();
         return false;
-    }
-
-    private void hideSoftKeboard() {
-        InputMethodManager imm = (InputMethodManager)
-                this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = this.getCurrentFocus();
-        if (view == null) {
-            view = new View(this);
-        }
-        assert imm != null;
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private void showSoftKeboard() {
-        InputMethodManager imm = (InputMethodManager)
-                this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = this.getCurrentFocus();
-        if (view == null) {
-            view = new View(this);
-        }
-        assert imm != null;
-        imm.showSoftInput(view, 0);
     }
 
     //EXTRA

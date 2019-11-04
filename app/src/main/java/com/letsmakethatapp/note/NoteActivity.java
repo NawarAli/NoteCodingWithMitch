@@ -2,6 +2,7 @@ package com.letsmakethatapp.note;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,8 +13,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.letsmakethatapp.note.Persistence.NoteRepository;
 import com.letsmakethatapp.note.models.Note;
 
 public class NoteActivity extends AppCompatActivity
@@ -37,18 +40,24 @@ public class NoteActivity extends AppCompatActivity
     private Note mNote;
     private int mMode;
     private GestureDetector mGestureDetector;
+    private NoteRepository mNoteRepository;
+    private Note mFinalNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         intiViews();
+        mNoteRepository = new NoteRepository(this);
         mIsNewNote = getIncomingIntent();
         setListener();
         if (mIsNewNote) {
             //this is new note go to edit mode
             setNewNoteProperties();
             enableEditMode();
+            mEditTitle.setFocusableInTouchMode(true);
+            mEditTitle.setCursorVisible(true);
+            mEditTitle.requestFocus();
 
         } else {
             setNoteProperties();
@@ -78,6 +87,7 @@ public class NoteActivity extends AppCompatActivity
     private boolean getIncomingIntent() {
         if (getIntent().hasExtra("selected_note")) {
             mNote = getIntent().getParcelableExtra("selected_note");
+            mFinalNote = getIntent().getParcelableExtra("selected_note");
             mMode = EDIT_MODE_DISABLED;
             return false;
         }
@@ -89,6 +99,10 @@ public class NoteActivity extends AppCompatActivity
     private void setNewNoteProperties() {
         mViewTitle.setText("Note Title");
         mEditTitle.setText("Note Title");
+        mNote = new Note();
+        mFinalNote =  new Note();
+        mNote.setTitle("Note Title");
+        mFinalNote.setTitle("Note Title");
     }
 
     private void setNoteProperties() {
@@ -114,6 +128,21 @@ public class NoteActivity extends AppCompatActivity
         mEditTitle.setVisibility(View.GONE);
         mMode = EDIT_MODE_DISABLED;
         disableContentInteraction();
+        String temp = mLinedEditText.getText().toString();
+        temp = temp.replace("\n", "");
+        temp = temp.replace(" ", "");
+        if(temp.length() > 0) {
+            mFinalNote.setTitle(mEditTitle.getText().toString());
+            mFinalNote.setContent(mLinedEditText.getText().toString());
+            String timestamp = "jan 2019";
+            mFinalNote.setTimestamp(timestamp);
+            if(!mFinalNote.getContent().equals(mNote.getContent()) ||
+            !mFinalNote.getTitle().equals(mNote.getTitle())){
+                saveChanges();
+                mViewTitle.setText(mEditTitle.getText().toString());
+            }
+        }
+
     }
 
     private void enableContentInteraction() {
@@ -201,6 +230,31 @@ public class NoteActivity extends AppCompatActivity
         return false;
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("mode", mMode);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMode = savedInstanceState.getInt("mode");
+        if(mMode == EDIT_MODE_ENABLED){
+            enableEditMode();
+        }
+    }
+    private void saveChanges(){
+        if(mIsNewNote){
+            saveNewNote();
+        }
+        else{
+
+        }
+    }
+    private void saveNewNote(){
+        mNoteRepository.insertNoteTask(mFinalNote);
+    }
     //EXTRA
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {

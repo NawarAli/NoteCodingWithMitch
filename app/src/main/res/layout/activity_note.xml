@@ -28,8 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        android:inputType="text"
+        android:inputType="text|textMultiLine"
         android:padding="5dp"
-        android:textColor="@color/black"
-        android:textSize="23sp" />
+        android:textColor="@color/text_color"
+        android:textSize="23sp"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:imeOptions="flagNoExtractUi"/>
 </LinearLayout>
